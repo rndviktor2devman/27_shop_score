@@ -1,1 +1,6 @@
 shop
+bower.json
+package.json
+static/bower_components
+node_modules
+gulpfile.js
