@@ -1,0 +1,26 @@
+.orders-scroll{
+    width: 400px;
+    height: 250px;
+    overflow-y: auto;
+}
+
+.order-bordered{
+    border: 1px #0b2780;
+    background: #d0e8fd;
+}
+
+.child-div{
+    display: inline-block;
+}
+
+.color-yellow{
+    color: #ffcd13;
+}
+
+.color-red{
+    color: #ff1624;
+}
+
+.color-green{
+    color: #41804b;
+}

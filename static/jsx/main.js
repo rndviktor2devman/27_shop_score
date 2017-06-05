@@ -1,9 +1,8 @@
-var ScoreComponent = React.CreateClass({
+var ScoreComponent = React.createClass({
     getInitialState: function () {
         return {
-            wait_time: null,
-            unfinished_orders: null,
-            finished_orders: null
+            orders_confirmed: [],
+            orders_waiting: []
         };
     },
 
@@ -18,10 +17,7 @@ var ScoreComponent = React.CreateClass({
           dataType: 'json',
           cache: false,
           success: function(data) {
-              var wait = data.wait_time;
-              var finished = data.finished_orders;
-              var unfinished = data.unfinished_orders;
-              this.setState({wait_time: wait, finished_orders: finished, unfinished_orders: unfinished});
+              this.setState({orders_confirmed: data.orders_confirmed, orders_waiting: data.orders_waiting});
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -30,17 +26,53 @@ var ScoreComponent = React.CreateClass({
     },
 
     render: function () {
+        var confirmed = this.state.orders_confirmed;
+        var waiting = this.state.orders_waiting;
         return (<div>
             <div className="row">
-                <div className="col-md-12 status_row_class row">
-                    <h1>Время ожидания заявок {this.state.wait_time}</h1>
-                </div>
-                <div className="col-md-12 status_row_class row">
-                    <h1>Время ожидания заявок {this.state.finished_orders}</h1>
-                </div>
-                <div className="col-md-12 status_row_class row">
-                    <h1>Время ожидания заявок {this.state.unfinished_orders}</h1>
-                </div>
+                {confirmed.length > 0?(
+                    <div>
+                        <div className="col-md-12 status_row_class row centered">
+                            <h1>Выполненные заявки</h1>
+                        </div>
+                        <form role="form" className="panel panel-default orders-scroll">
+                            <div className="form-group centered">
+                                {confirmed.map(function (order) {
+                                    var wait_status = order.wait_status;
+                                    var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
+                                    return <div className="col-md-3" title={order.price}>
+                                        <div className={wait_status}>
+                                            <div className="row">{order.created}</div>
+                                            <div className="row">{order.confirmed}</div>
+                                        </div>
+                                        <div className={customer_status + ' row'}>{order.status}</div>
+                                    </div>
+                                })}
+                            </div>
+                        </form>
+
+                    </div>): null}
+
+                {waiting.length > 0?(
+                    <div>
+                        <div className="col-md-12 status_row_class row centered">
+                            <h1>Заявки в ожидании</h1>
+                        </div>
+                        <form role="form" className="panel panel-default orders-scroll">
+                            <div className="form-group  centered">
+                                {waiting.map(function (order) {
+                                    var wait_status = order.wait_status;
+                                    var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
+                                    return <div className="col-md-3" title={order.price}>
+                                        <div className={wait_status}>
+                                            <div className="row">{order.created}</div>
+                                        </div>
+                                        <div className={customer_status + ' row'}>{order.status}</div>
+                                    </div>
+                                })}
+                            </div>
+                        </form>
+                    </div>): null}
             </div>
         </div>)
     }

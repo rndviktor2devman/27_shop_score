@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify
 from datetime import datetime, date
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import cast, Date
 
 
 app = Flask(__name__)
@@ -16,20 +16,46 @@ class Orders(db.Model):
 
 @app.route('/get_status')
 def sratus():
-    unfinished_order = Orders.query.order_by(Orders.created).filter(Orders.confirmed.is_(None)).first()
-    wait_seconds = round((datetime.now() - unfinished_order.created).total_seconds())
-    unfinished_amount = Orders.query.filter(Orders.confirmed.is_(None)).count()
-    finished_amount = Orders.query.filter(Orders.confirmed.is_(not None)).count()
-    return jsonify({'wait_time': wait_seconds, 'finished': finished_amount, 'unfinished': unfinished_amount})
+    today_orders = Orders.query.filter(cast(Orders.created, Date) == datetime.now().date())
+    orders_confirmed = []
+    orders_waiting = []
+    for order in today_orders.all():
+        if order.confirmed is None:
+            wait_time = (datetime.now() - order.created).total_seconds() / 60
+            confirmed = None
+        else:
+            wait_time = (order.confirmed - order.created).total_seconds() / 60
+            confirmed = order.confirmed.strftime("%H:%M:%S")
+        if wait_time < 7:
+            wait_status = 'color-green'
+        elif wait_time < 30:
+            wait_status = 'color-yellow'
+        else:
+            wait_status = 'color-green'
+        order_data = {
+            'price': str(order.price),
+            'status': order.status,
+            'created': order.created.strftime("%H:%M:%S"),
+            'confirmed': confirmed,
+            'wait_status': wait_status
+        }
+        if order_data['confirmed'] is not None:
+            orders_confirmed.append(order_data)
+        else:
+            orders_waiting.append(order_data)
 
+    orders_confirmed.sort(key=lambda x: x['created'])
+    orders_waiting.sort(key=lambda x: x['created'])
+
+    response_data = {
+        'orders_confirmed': orders_confirmed,
+        'orders_waiting': orders_waiting
+    }
+    return jsonify(response_data)
 
 
 @app.route('/')
 def score():
-    # unfinished_order = Orders.query.order_by(Orders.created).filter(Orders.confirmed.is_(None)).first()
-    # wait_seconds = round((datetime.now() - unfinished_order.created).total_seconds())
-    # unfinished_amount = Orders.query.filter(Orders.confirmed.is_(None)).count()
-    
     return render_template('score.html')
 
 if __name__ == "__main__":
