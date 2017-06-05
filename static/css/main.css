@@ -12,7 +12,7 @@
 
 .child-div{
     display: inline-block;
-    margin: 2px;
+    margin: 0 2px 0 3px;
 }
 
 .color-yellow{
