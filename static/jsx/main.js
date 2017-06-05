@@ -40,7 +40,7 @@ var ScoreComponent = React.createClass({
                                 {confirmed.map(function (order) {
                                     var wait_status = order.wait_status;
                                     var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
-                                    return <div className="col-md-3" title={order.price}>
+                                    return <div className="col-md-3 child-div" title={order.price}>
                                         <div className={wait_status}>
                                             <div className="row">{order.created}</div>
                                             <div className="row">{order.confirmed}</div>
@@ -63,7 +63,7 @@ var ScoreComponent = React.createClass({
                                 {waiting.map(function (order) {
                                     var wait_status = order.wait_status;
                                     var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
-                                    return <div className="col-md-3" title={order.price}>
+                                    return <div className="col-md-3 child-div" title={order.price}>
                                         <div className={wait_status}>
                                             <div className="row">{order.created}</div>
                                         </div>

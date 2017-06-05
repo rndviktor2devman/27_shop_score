@@ -41,7 +41,7 @@ var ScoreComponent = React.createClass({displayName: "ScoreComponent",
                                 confirmed.map(function (order) {
                                     var wait_status = order.wait_status;
                                     var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
-                                    return React.createElement("div", {className: "col-md-3", title: order.price}, 
+                                    return React.createElement("div", {className: "col-md-3 child-div", title: order.price}, 
                                         React.createElement("div", {className: wait_status}, 
                                             React.createElement("div", {className: "row"}, order.created), 
                                             React.createElement("div", {className: "row"}, order.confirmed)
@@ -64,7 +64,7 @@ var ScoreComponent = React.createClass({displayName: "ScoreComponent",
                                 waiting.map(function (order) {
                                     var wait_status = order.wait_status;
                                     var customer_status = order.status.indexOf('CANCEL') !== -1? 'color-red': null;
-                                    return React.createElement("div", {className: "col-md-3", title: order.price}, 
+                                    return React.createElement("div", {className: "col-md-3 child-div", title: order.price}, 
                                         React.createElement("div", {className: wait_status}, 
                                             React.createElement("div", {className: "row"}, order.created)
                                         ), 

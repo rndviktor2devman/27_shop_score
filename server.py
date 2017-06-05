@@ -31,7 +31,7 @@ def sratus():
         elif wait_time < 30:
             wait_status = 'color-yellow'
         else:
-            wait_status = 'color-green'
+            wait_status = 'color-red'
         order_data = {
             'price': str(order.price),
             'status': order.status,
