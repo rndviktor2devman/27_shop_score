@@ -1,5 +1,6 @@
 .orders-scroll{
-    width: 400px;
+    horiz-align: center;
+    width: 350px;
     height: 270px;
     overflow-y: auto;
 }
