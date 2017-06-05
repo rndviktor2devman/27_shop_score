@@ -15,7 +15,7 @@ class Orders(db.Model):
 
 
 @app.route('/get_status')
-def sratus():
+def status():
     today_orders = Orders.query.filter(cast(Orders.created, Date) == datetime.now().date())
     orders_confirmed = []
     orders_waiting = []
