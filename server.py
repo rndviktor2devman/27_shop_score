@@ -1,11 +1,13 @@
-from flask import Flask, render_template, jsonify
-from datetime import datetime, date
+from flask import Flask, render_template, request, jsonify, \
+    send_from_directory
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import cast, Date
+from os import getenv
 
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.reflect()
 
@@ -20,8 +22,13 @@ def get_waiting_time():
     if order is None:
         return 0
     else:
-        return datetime.now().hour*60 + datetime.now().minute -\
-               order.created.hour+order.created.minute
+        wait_time = datetime.now() - order.created
+        return wait_time - timedelta(microseconds=wait_time.microseconds)
+
+
+@app.route('/robots.txt')
+def robots_file():
+    return send_from_directory('', request.path[1:])
 
 
 @app.route('/')
