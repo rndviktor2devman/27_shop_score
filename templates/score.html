@@ -20,16 +20,16 @@
   <body>
     <div class="container">
       <div class="text-center wait-time panel panel-default col-lg-12">
-        <h1>Время ожидания {{ waiting_time }} минут</h1>
+        <h1 id="main_message">Время ожидания <span id="wait_time"></span> минут</h1>
       </div>
     </div>
     <div class="container">
       <div class="panel panel-default col-lg-12">
-        <div class="row">
-          <h3>Обработано за день: {{ processed_day }}</h3>
+        <div class="row text-center">
+          <h3>Обработано за день: <span id="confirmed"></span></h3>
         </div>
-        <div class="row">
-          <h3>Необработано: {{ unconfirmed }}</h3>
+        <div class="row text-center">
+          <h3>В ожидании: <span id="unconfirmed"></span></h3>
         </div>
       </div>
     </div>

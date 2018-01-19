@@ -31,8 +31,8 @@ def robots_file():
     return send_from_directory('', request.path[1:])
 
 
-@app.route('/')
-def score():
+@app.route('/check_state')
+def check_state():
     confirmed_orders = Orders.query.filter(
         Orders.confirmed.isnot(None)).order_by(Orders.status)
     today_date = datetime.now()
@@ -43,10 +43,14 @@ def score():
         Orders.confirmed.is_(None)).order_by(Orders.status).count()
 
     wait_time = get_waiting_time()
-    return render_template('score.html',
-                           processed_day=len(today_confirmed),
-                           waiting_time=wait_time,
-                           unconfirmed=unconfirmed_orders)
+    return jsonify(processed_day=len(today_confirmed),
+                   waiting_time=wait_time,
+                   unconfirmed=unconfirmed_orders)
+
+
+@app.route('/')
+def default():
+    return render_template('score.html')
 
 
 if __name__ == "__main__":
