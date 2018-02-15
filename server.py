@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, jsonify, \
     send_from_directory
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, Text, DateTime, Enum
+from sqlalchemy import Column, String, DateTime, Enum, and_
 from os import getenv
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URL')
@@ -23,8 +22,8 @@ class Orders(db.Model):
 
 
 def get_waiting_time():
-    order = Orders.query.filter(
-        Orders.confirmed.is_(None)).first()
+    order = Orders.query.filter(Orders.created > date.today(),
+                                and_(Orders.confirmed.is_(None))).first()
     if order is None:
         return 0
     else:
@@ -39,12 +38,10 @@ def robots_file():
 
 @app.route('/check_state')
 def check_state():
-    confirmed_orders = Orders.query.filter(
-        Orders.confirmed.isnot(None)).order_by(Orders.status)
-    today_date = datetime.now()
-    today_confirmed = [order for order in confirmed_orders
-                       if order.confirmed.day == today_date.day
-                       and order.confirmed.month == today_date.month]
+    today_confirmed = Orders.query.filter(Orders.confirmed.isnot(None),
+                                          and_(Orders.confirmed > date.today())
+                                          ).order_by(Orders.status).all()
+
     unconfirmed_orders = Orders.query.filter(
         Orders.confirmed.is_(None)).order_by(Orders.status).count()
 
