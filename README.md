@@ -2,9 +2,14 @@
 
 This project represents example of simple dashboard, for example web-store dashboard.
 After start the board checks the state of the remote database and shows KPI,
-in our particular case they are 'Count of orders', 'Count of orders in a waiting list', 'The longest wait time'.
+in our particular case they are 'Count of orders today', 'Count of orders in a waiting list', 'The longest wait time'.
 
 Example of working page is available [here](http://hidden-basin-76325.herokuapp.com/)
+
+# Environment
+
+* python3
+* mobile-first website
 
 # Setup
 
